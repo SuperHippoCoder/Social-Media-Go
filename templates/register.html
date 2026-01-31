@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration User</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white text-slate-900 font-sans antialiased">
+
+    <div class="flex flex-col items-center justify-center min-h-screen p-6">
+        
+        <!-- Логоэ -->
+        <div class="flex items-center mb-12">
+            <img src="/static/Gopher.png" alt="Logo" class="w-12 h-12 mr-3 object-contain">
+            <span class="text-xl font-medium tracking-tight text-slate-900">Social Media Go</span>
+        </div>
+
+        <!-- {{if .Error}} -->
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                {{.Error}}
+            </div>
+        <!-- {{end}} -->
+
+        <!-- Контейнерэ -->
+        <div class="w-full max-w-[380px] bg-white border border-slate-200 p-10 shadow-sm">
+            
+            <h2 class="text-2xl font-semibold mb-8 text-slate-900">Регистрация</h2>
+
+            <form action="/register" method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-slate-500 mb-2" for="username">Логин</label>
+                    <input type="text" name="username" id="username" required placeholder="Введите логин"
+                        class="w-full bg-slate-50 p-4 border border-slate-200 outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-300">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-slate-500 mb-2" for="password">Пароль</label>
+                    <input type="password" name="password" id="password" required placeholder="••••••"
+                        class="w-full bg-slate-50 p-4 border border-slate-200 outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-300">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium uppercase tracking-wider text-slate-500 mb-2" for="passwordRepeat">Повторите Пароль</label>
+                    <input type="password" name="passwordRepeat" id="passwordRepeat" required placeholder="••••••"
+                        class="w-full bg-slate-50 p-4 border border-slate-200 outline-none focus:border-blue-500 focus:bg-white transition-all placeholder:text-slate-300">
+                </div>
+
+                <!-- Кнопкэ -->
+                <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 transition-colors">
+                    Продолжить
+                </button>
+            </form>
+        </div>
+
+        <p class="mt-8 text-sm text-slate-400">Уже есть аккаунт? <a href="/login" class="text-slate-600 font-medium underline">Вход</a></p>
+    </div>
+
+    <script>
+        const password = document.getElementById('password');
+        const passwordRepeat = document.getElementById('passwordRepeat');
+    
+        function validatePassword() {
+            if (password.value !== passwordRepeat.value) {
+                passwordRepeat.setCustomValidity("Пароли не совпадают");
+            } else {
+                passwordRepeat.setCustomValidity("");
+            }
+        }
+    
+        password.onchange = validatePassword;
+        passwordRepeat.onkeyup = validatePassword;
+    </script>
+
+</body>
+</html>

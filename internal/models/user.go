@@ -22,7 +22,7 @@ func (u *UserModel) AuthenticateUser(username, password string) (*User, error) {
 	var user User
 
 	// Ищет пользователя с таким именем. Так как юзернейм уникален если такой уже есть, то выдаем ошибку
-	if err := u.DB.Where("username = ?", username).First(&user).Error; err != nil {
+	if err := u.DB.Model(&User{}).Where("username = ?", username).First(&user).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("Invalid credentials")
 		}
@@ -37,4 +37,23 @@ func (u *UserModel) AuthenticateUser(username, password string) (*User, error) {
 
 	// Возращаем созданного юзера
 	return &user, nil
+}
+
+func (u *UserModel) RegisterUser(username, password string) error {
+	var count int64
+	if _ = u.DB.Model(&User{}).Where("username = ?", username).Count(&count); count >= 1 {
+		return errors.New("User with this name already exsits")
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return errors.New("Cannot hash password")
+	}
+
+	user := User{
+		Username: username,
+		Password: string(hashedPassword),
+	}
+
+	return u.DB.Create(&user).Error
 }
